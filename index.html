@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北京时间 - Beijing Time</title>
+    <meta name="description" content="实时显示北京时间，精美的时钟界面设计">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 动态背景效果 */
+        .bg-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 25s infinite;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .bg-animation span:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .bg-animation span:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-animation span:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .bg-animation span:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .bg-animation span:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .bg-animation span:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .bg-animation span:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .bg-animation span:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes float {
+            0% {
+                bottom: -150px;
+                transform: translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                bottom: 100%;
+                transform: translateX(100px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-width: 500px;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 1s ease;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease 0.2s backwards;
+        }
+
+        .time-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                         0 0 40px rgba(255, 255, 255, 0.3);
+            margin: 30px 0;
+            letter-spacing: 0.05em;
+            animation: fadeIn 1s ease 0.4s backwards, glow 2s ease-in-out infinite alternate;
+        }
+
+        .date-display {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin: 20px 0;
+            font-weight: 400;
+            animation: fadeIn 1s ease 0.6s backwards;
+        }
+
+        .timezone-info {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease 0.8s backwards;
+        }
+
+        .seconds {
+            font-size: 0.6em;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                             0 0 40px rgba(255, 255, 255, 0.3);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+                             0 0 60px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                min-width: auto;
+                width: 90%;
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .time-display {
+                font-size: 3rem;
+            }
+
+            .date-display {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .time-display {
+                font-size: 2.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="container">
+        <h1>🇨🇳 北京时间</h1>
+        <p class="subtitle">Beijing Time - China Standard Time</p>
+        
+        <div id="time" class="time-display">--:--:--</div>
+        <div id="date" class="date-display">---- 年 -- 月 -- 日 星期--</div>
+        
+        <div class="timezone-info">
+            <strong>时区：</strong>UTC+8 (中国标准时间 CST)
+        </div>
+    </div>
+
+    <script>
+        // 获取星期几的中文
+        function getWeekDay(day) {
+            const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+            return weekDays[day];
+        }
+
+        // 更新时间显示
+        function updateTime() {
+            // 获取当前时间并转换为北京时间 (UTC+8)
+            const now = new Date();
+            
+            // 获取当地时区偏移量（分钟）
+            const localOffset = now.getTimezoneOffset() * 60000;
+            
+            // 获取UTC时间
+            const utc = now.getTime() + localOffset;
+            
+            // 北京时间 = UTC + 8小时
+            const beijingTime = new Date(utc + (3600000 * 8));
+            
+            // 格式化时间
+            const hours = String(beijingTime.getHours()).padStart(2, '0');
+            const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
+            const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
+            
+            // 格式化日期
+            const year = beijingTime.getFullYear();
+            const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
+            const date = String(beijingTime.getDate()).padStart(2, '0');
+            const weekDay = getWeekDay(beijingTime.getDay());
+            
+            // 更新DOM
+            document.getElementById('time').innerHTML = 
+                `${hours}:${minutes}<span class="seconds">:${seconds}</span>`;
+            document.getElementById('date').textContent = 
+                `${year} 年 ${month} 月 ${date} 日 星期${weekDay}`;
+        }
+
+        // 初始化
+        updateTime();
+        
+        // 每秒更新一次
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
